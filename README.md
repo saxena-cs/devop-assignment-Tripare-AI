@@ -1,16 +1,44 @@
 # devop-assignment-Tripare-AI
 Tripare AI assignment 
 
-The main query filters by city and created_at, then groups by org_id and status while calculating SUM(amount).
 
-Index used:
+# Hotel Platform Infrastructure and Database Assignment
 
-CREATE INDEX idx_hotel_bookings_city_created_org_status
-ON hotel_bookings (city, created_at, org_id, status)
-INCLUDE (amount);
+This repository contains:
 
-Reason:
-- city is used as an equality filter.
-- created_at is used as a range filter for the last 30 days.
-- org_id and status are used in GROUP BY.
-- amount is included to help PostgreSQL read the aggregate value from the index where possible.
+- Terraform infrastructure for Internet → ALB → ECS/Fargate → RDS
+- Separate Terraform environments for dev and prod
+- GitHub Actions Terraform plan workflow
+- Local PostgreSQL database using Docker Compose
+- SQL migrations and seed data
+- Backup and restore scripts
+
+---
+
+## Architecture
+
+Traffic flow:
+
+Internet → Public ALB → ECS/Fargate private tasks → Private RDS PostgreSQL
+
+Security design:
+
+- ALB is public and accepts HTTP traffic on port 80.
+- ECS/Fargate tasks are deployed in private subnets.
+- RDS is deployed in private database subnets.
+- RDS security group allows PostgreSQL traffic only from the ECS/Fargate security group.
+- RDS is not publicly accessible.
+
+---
+
+## Terraform Structure
+
+```text
+infra/
+  modules/
+    network/
+    ecs/
+    rds/
+  envs/
+    dev/
+    prod/
