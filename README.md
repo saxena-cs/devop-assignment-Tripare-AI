@@ -1,4 +1,4 @@
-# devop-assignment-Tripare-AI
+# devops-assignment-Tripare-AI
 Tripare AI assignment 
 
 
