@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: hotel_postgres
+    environment:
+      POSTGRES_DB: hotel_db
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - hotel_postgres_data:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d/migrations
+      - ./db/seed:/docker-entrypoint-initdb.d/seed
+      - ./db/migrations/001_create_tables.sql:/docker-entrypoint-initdb.d/001_create_tables.sql
+      - ./db/seed/seed_data.sql:/docker-entrypoint-initdb.d/002_seed_data.sql
+      - ./db/migrations/002_indexes.sql:/docker-entrypoint-initdb.d/003_indexes.sql
+
+volumes:
+  hotel_postgres_data:
